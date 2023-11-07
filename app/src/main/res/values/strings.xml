@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Diagnosis</string>
+    <string name="app_desc">Diagnose your devices health \n for optimal performance</string>
+    <string name="skip">Skip</string>
+</resources>

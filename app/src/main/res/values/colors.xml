@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="gray">#2B2B2B</color>
+    <color name="lightgray">#E6DDDD</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#12afda</color>
+    <color name="darkBlue">#007393</color>
+    <color name="lightBlue">#cdeaf2</color>
+    <color name="lightGreen">#CDF2DE</color>
+    <color name="lightRed">#F2CDCD</color>
+    <color name="red">#FF0000</color>
+    <color name="lightIcon">#3276c3</color>
+</resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490274428750",
+    "project_id": "diagnosis-9f7bf",
+    "storage_bucket": "diagnosis-9f7bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490274428750:android:576be856b92ed0c777b01f",
+        "android_client_info": {
+          "package_name": "com.mobilicis.diagnosis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArmXSauRMs24G2CcDezcOW6aje9o05Q8w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
