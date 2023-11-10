@@ -170,7 +170,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (cancel.getText().toString() == "Continue"){
+        if (cancel.getText().toString().equals("Continue")){
             super.onBackPressed();
         }
         else {
@@ -180,6 +180,8 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
             builder.setTitle("Alert !");
             builder.setCancelable(false);
             builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
+                startActivity(intent);
                 super.onBackPressed();
                 finish();
             });
@@ -319,7 +321,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (secondaryWorking ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
                     secondaryMicrophoneWorking = secondaryWorking ? "Secondary microphone is working." : "Secondary microphone is not working.";
                     item = new RecyclerViewModel(secondaryMicrophoneWorking, imgUri, false);
-                    data.set(2, item);
+                    data.add(item);
                     setMyAdapter();
                     progress.setProgress(35);
                     RootedStatusTest();
@@ -368,7 +370,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                 imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (isDeviceRooted() ? R.drawable.warning_circle_svgrepo_com : R.drawable.done_round_svgrepo_com));
                 rootedStatus = isDeviceRooted() ? "Device is rooted." : "Device is not rooted.";
                 item = new RecyclerViewModel(rootedStatus, imgUri, false);
-                data.set(3, item);
+                data.set(4, item);
                 setMyAdapter();
                 progress.setProgress(40);
                 BluetoothTest();
@@ -420,17 +422,17 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.cancel_svgrepo_com);
                     bluetoothWorking = "Bluetooth not supported on this device";
                     item = new RecyclerViewModel(bluetoothWorking, imgUri, false);
-                    data.set(4, item);
+                    data.set(5, item);
                     setMyAdapter();
                 } else {
                     imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (bluetoothAdapter.isEnabled() ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
                     bluetoothWorking = bluetoothAdapter.isEnabled() ? "Bluetooth is ENABLED." : "Bluetooth is DISABLED.";
                     item = new RecyclerViewModel(bluetoothWorking, imgUri, false);
-                    data.set(4, item);
+                    data.set(5, item);
                     setMyAdapter();
-                    progress.setProgress(55);
-                    AccelerometerTest();
                 }
+                progress.setProgress(55);
+                AccelerometerTest();
             }
         }, 3000);
     }
@@ -452,7 +454,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (accelerometerSensor != null ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
                     accelerometerWorking = accelerometerSensor != null ? "Accelerometer is Working." : "Accelerometer is Not Working.";
                     item = new RecyclerViewModel(accelerometerWorking, imgUri, false);
-                    data.set(5, item);
+                    data.set(6, item);
                     setMyAdapter();
                     progress.setProgress(70);
                     GPSTest();
@@ -481,7 +483,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (isEnable ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
                     gpsWorking = isEnable ? "GPS is enable." : "GPS is disable.";
                     item = new RecyclerViewModel(gpsWorking, imgUri, false);
-                    data.set(6, item);
+                    data.set(7, item);
                     setMyAdapter();
                     ObjectAnimator.ofInt(progress, "progress", 85).start();
                     fingerprintTest();
@@ -510,19 +512,19 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                         imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.cancel_svgrepo_com);
                         fingerprintWorking = "Fingerprint sensor is not available.";
                         item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(7, item);
+                        data.set(8, item);
                         setMyAdapter();
                     } else if (!fingerprintManager.hasEnrolledFingerprints()) {
                         imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.warning_circle_svgrepo_com);
                         fingerprintWorking = "Fingerprint sensor is working \n but not enrolled.";
                         item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(7, item);
+                        data.set(8, item);
                         setMyAdapter();
                     } else {
                         imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.done_round_svgrepo_com);
                         fingerprintWorking = "Fingerprint sensor is working.";
                         item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(7, item);
+                        data.set(8, item);
                         setMyAdapter();
                     }
                     progress.setProgress(100);

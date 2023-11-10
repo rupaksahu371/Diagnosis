@@ -83,7 +83,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tests"
         android:layout_width="match_parent"
-        android:layout_height="350dp"/>
+        android:layout_height="410dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cancel_button"
@@ -91,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="90dp"
         android:focusable="true"
         android:text="@string/skip" />
 </LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FrontCameraActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:id="@+id/showImg1"
+        android:background="@color/gray"
+        android:layout_margin="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/visible_btn1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Visible"
+            app:backgroundTint="@color/blue"
+            style="@style/buttonStyle"/>
+        <Button
+            android:id="@+id/notVisible_btn1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/blue"
+            android:text="Not Visible"
+            style="@style/buttonStyle"/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -32,19 +33,24 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private Uri showUri;
+    private ImageCapture imageCapture;
+    private String showUri;
     private static final int REQUEST_CODE_PERMISSIONS = 1001;
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA};
     private Executor executor = Executors.newSingleThreadExecutor();
-    TextView instruction;
     private PreviewView previewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    CameraSelector cameraSelector;
+    TextView instruction;
     ImageButton Click;
+    Class<?> IntentClass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +60,11 @@ public class CameraActivity extends AppCompatActivity {
         instruction = findViewById(R.id.instruction_tv);
         previewView = findViewById(R.id.camera_preview);
 
+        Intent intent = getIntent();
+        if (intent!=null){
+            cameraSelector = Objects.equals(intent.getStringExtra("cameraSelector"), "back") ? CameraSelector.DEFAULT_BACK_CAMERA : CameraSelector.DEFAULT_FRONT_CAMERA;
+            IntentClass = Objects.equals(intent.getStringExtra("cameraSelector"), "back") ? BackCameraActivity.class : FrontCameraActivity.class ;
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -78,34 +89,51 @@ public class CameraActivity extends AppCompatActivity {
         return true;
     }
 
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA};
-
     private void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
-        cameraProviderFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
+        cameraProviderFuture.addListener(() -> {
                 try {
                     ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                     cameraProvider.unbindAll();
-                    bindPreview(cameraProvider);
-                } catch (ExecutionException | InterruptedException e) {
-                }
-            }
+                    Preview preview = new Preview.Builder().build();
+                    ImageCapture.Builder builder = new ImageCapture.Builder();
+
+                    imageCapture = new ImageCapture.Builder()
+                            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                            .build();
+
+                    Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview, imageCapture);
+                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                    ImageCapture.OnImageCapturedCallback onImageCapturedCallback = null;
+                    Click.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ImageCapture.OutputFileOptions outputFileOptions =
+                                    new ImageCapture.OutputFileOptions.Builder(getNoBackupFilesDir()).build();
+                            imageCapture.takePicture(outputFileOptions, executor,
+                                    new ImageCapture.OnImageSavedCallback() {
+                                        @Override
+                                        public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                                            // insert your code here.
+                                            showUri = String.valueOf(outputFileResults.getSavedUri());
+                                            Intent intent = new Intent(CameraActivity.this, IntentClass);
+                                            intent.putExtra("showUri", showUri);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        @Override
+                                        public void onError(ImageCaptureException error) {
+                                            // insert your code here.
+                                            Toast.makeText(CameraActivity.this, "Can't take a photo", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                            );
+                        }
+                    });
+                } catch (ExecutionException | InterruptedException e) {}
         }, ContextCompat.getMainExecutor(this));
-    }
-    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-
-        Preview preview = new Preview.Builder().build();
-
-        ImageCapture.Builder builder = new ImageCapture.Builder();
-
-        final ImageCapture imageCapture = builder.setTargetRotation(this.getWindowManager().getDefaultDisplay().getRotation()).build();
-
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageCapture);
-
     }
 
     @Override
