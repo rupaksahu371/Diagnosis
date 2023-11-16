@@ -4,15 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.fingerprint.FingerprintManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +59,7 @@ public class TestActivity extends AppCompatActivity {
     static private String isAutoTest;
     static private String GyroscopeWorking;
     static private String ProximityWorking;
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION};
     Button Export;
     ImageButton Back;
     LinearLayout AutoTest, backCamera, frontCamera, Bluetooth, Gyroscope, Proximity, GPS, Fingerprint;
@@ -82,14 +87,10 @@ public class TestActivity extends AppCompatActivity {
                 backCameraRecording = intent.getStringExtra("backCameraRecording");
             } else if ("frontIntent".equals(from)) {
                 frontCameraRecording = intent.getStringExtra("frontCameraRecording");
-            } else if ("btIntent".equals(from)) {
-                bluetoothWorking = intent.getStringExtra("bluetoothWorking");
             }else if ("gyroscopeIntent".equals(from)) {
                 GyroscopeWorking = intent.getStringExtra("GyroscopeWorking");
             }else if ("proximityIntent".equals(from)) {
                 ProximityWorking = intent.getStringExtra("ProximityWorking");
-            }else if ("gpsIntent".equals(from)) {
-                gpsWorking = intent.getStringExtra("gpsWorking");
             }else if ("fingerprintIntent".equals(from)) {
                 fingerprintWorking = intent.getStringExtra("fingerprintWorking");
             }
@@ -189,6 +190,9 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (GyroscopeWorking != null && ProximityWorking == null){
                     //Check Proximity working of device
+                    Intent intent = new Intent(TestActivity.this, ProximityActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else {
                     Toast.makeText(TestActivity.this, "Run Gyroscope Test..", Toast.LENGTH_SHORT).show();
@@ -199,8 +203,20 @@ public class TestActivity extends AppCompatActivity {
         GPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ProximityWorking != null && ( Objects.equals(gpsWorking2, "null") || Objects.equals(gpsWorking2, "GPS is disable."))){
+                LocationManager locationManager;
+                if (ProximityWorking != null && ( Objects.equals(gpsWorking2, null) || Objects.equals(gpsWorking2, "GPS is disable."))){
                     //Check GPS working of device
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (allPermissionsGranted()) {
+                        // Start listening for location updates
+                        boolean isEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        gpsWorking2 = isEnable ? "GPS is enable." : "GPS is disable.";
+                        if (!isEnable){
+                            buildAlertMessageNoGps();
+                        }
+                        gpsWorking2 = isEnable ? "GPS is enable." : "GPS is disable.";
+                    }
+                    setUI();
                 }
                 else {
                     Toast.makeText(TestActivity.this, "Run Proximity Test..", Toast.LENGTH_SHORT).show();
@@ -211,7 +227,7 @@ public class TestActivity extends AppCompatActivity {
         Fingerprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (gpsWorking != null && fingerprintWorking == null){
+                if (gpsWorking2 != null && fingerprintWorking == null){
                     //Check Fingerprint working of device
                     Intent intent = new Intent(TestActivity.this, FingerprintActivity.class);
                     startActivity(intent);
@@ -226,8 +242,8 @@ public class TestActivity extends AppCompatActivity {
         Export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (backCameraWorking != null || frontCameraWorking != null || primaryMicrophoneWorking != null || secondaryMicrophoneWorking != null || bluetoothWorking != null || rootedStatus != null || accelerometerWorking != null || gpsWorking != null || fingerprintWorking != null){
-                    Tests tests = new Tests(backCameraWorking, frontCameraWorking, primaryMicrophoneWorking, secondaryMicrophoneWorking, bluetoothWorking, rootedStatus, accelerometerWorking, gpsWorking, fingerprintWorking);
+                if (backCameraWorking != null || backCameraRecording != null ||frontCameraWorking != null || frontCameraRecording != null ||primaryMicrophoneWorking != null || secondaryMicrophoneWorking != null || bluetoothWorking != null || bluetoothWorking2 != null || rootedStatus != null || accelerometerWorking != null || gpsWorking != null || gpsWorking2 != null || fingerprintWorking != null){
+                    Tests tests = new Tests(backCameraWorking, backCameraRecording, frontCameraWorking, frontCameraRecording, primaryMicrophoneWorking, secondaryMicrophoneWorking, bluetoothWorking, bluetoothWorking2, rootedStatus, accelerometerWorking, gpsWorking, gpsWorking2, fingerprintWorking);
                     db = FirebaseDatabase.getInstance();
                     reference = db.getReference("Tests");
                     Date currentTime = Calendar.getInstance().getTime();
@@ -334,7 +350,7 @@ public class TestActivity extends AppCompatActivity {
             }
         }
         if (Objects.equals(isAutoTest, ("Done")) && ProximityWorking != null) {
-            if (Objects.equals(gpsWorking2, "null") || Objects.equals(gpsWorking2, "GPS is disable.")){
+            if (Objects.equals(gpsWorking2, null) || Objects.equals(gpsWorking2, "GPS is disable.")){
                 GPS_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             } else {
                 GPS_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
@@ -347,5 +363,32 @@ public class TestActivity extends AppCompatActivity {
                 Fingerprint_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             }
         }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private boolean allPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 }

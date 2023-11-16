@@ -10,11 +10,13 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GyroscopeActivity extends AppCompatActivity implements SensorEventListener {
     ImageView iv_gyroscope;
+    ImageButton Back;
     Button Continue;
     private TextView gyroscopeStatusTextView;
     private SensorManager sensorManager;
@@ -28,6 +30,7 @@ public class GyroscopeActivity extends AppCompatActivity implements SensorEventL
         gyroscopeStatusTextView = findViewById(R.id.gyroscopeStatusTextView);
         iv_gyroscope = findViewById(R.id.gyroscope_iv);
         Continue = findViewById(R.id.continue_btn);
+        Back = findViewById(R.id.back_btn2);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -36,6 +39,12 @@ public class GyroscopeActivity extends AppCompatActivity implements SensorEventL
             checkGyroscope();
         }
 
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         Continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +64,7 @@ public class GyroscopeActivity extends AppCompatActivity implements SensorEventL
             isGyroscopeWorking = true;
             gyroscopeStatusTextView.setText("Rotate the phone.");
         } else {
-            iv_gyroscope.setImageDrawable(getDrawable(R.drawable.rotate_exclamation_svgrepo_com));
+            iv_gyroscope.setImageDrawable(getDrawable(R.drawable.cancel_svgrepo_com));
             gyroscopeStatusTextView.setText("Gyroscope Status: Not Working");
             Continue.setVisibility(View.VISIBLE);
         }
@@ -111,5 +120,13 @@ public class GyroscopeActivity extends AppCompatActivity implements SensorEventL
 
     private boolean allPermissionsGranted() {
         return true; // Add any necessary permission checks here if required
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(GyroscopeActivity.this, TestActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

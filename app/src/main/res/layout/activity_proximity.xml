@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FingerprintActivity">
+    tools:context=".ProximityActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +16,7 @@
         style="@style/backgrounds">
         <ImageButton
             style="@style/iconStyle"
-            android:id="@+id/back_btn4"
+            android:id="@+id/back_btn3"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="7dp"
@@ -26,34 +28,34 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fingerprint Test"
-            android:textSize="25sp"
+            android:text="Proximity Sensor Test"
+            android:textSize="25dp"
             style="@style/textStyle"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="650dp"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="10dp">
+    <!-- Proximity Sensor Status TextView -->
         <ImageView
-            android:id="@+id/fingerprint_iv"
+            android:id="@+id/proximity_iv"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="20dp"
-            android:src="@drawable/fingerprint_svgrepo_com"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="23sp"
-            style="@style/textStyle"
-            android:text="Test Result"
-            android:id="@+id/fingerprintStatusTextView"/>
+            android:src="@drawable/proximity"/>
+    <TextView
+        android:id="@+id/proximityStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="23sp"
+        style="@style/textStyle"
+        android:text="Test Result"/>
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/continue_btn2"
+        android:id="@+id/continue_btn1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Continue"

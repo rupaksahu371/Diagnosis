@@ -187,7 +187,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                         }
                     }, 3000);
                 } catch (Exception e) {
-                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.warning_circle_svgrepo_com);
+                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.cancel_svgrepo_com);
                     backCameraWorking = "Back camera is not available or working.";
                     item = new RecyclerViewModel(backCameraWorking, imgUri, false);
                     data.set(0, item);
@@ -239,7 +239,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                         }
                     }, 3000);
                 } catch (Exception e) {
-                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.warning_circle_svgrepo_com);
+                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.cancel_svgrepo_com);
                     frontCameraWorking = "Front camera is not available or working.";
                     item = new RecyclerViewModel(frontCameraWorking, imgUri, false);
                     data.set(1, item);
@@ -273,11 +273,11 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (primaryWorking ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
+                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (primaryWorking ? R.drawable.done_round_svgrepo_com : R.drawable.cancel_svgrepo_com));
                     primaryMicrophoneWorking = primaryWorking ? "Primary microphone is working." : "Primary microphone is not working.";
                     item = new RecyclerViewModel(primaryMicrophoneWorking, imgUri, false);
                     data.set(2, item);
-                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (secondaryWorking ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
+                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (secondaryWorking ? R.drawable.done_round_svgrepo_com : R.drawable.cancel_svgrepo_com));
                     secondaryMicrophoneWorking = secondaryWorking ? "Secondary microphone is working." : "Secondary microphone is not working.";
                     item = new RecyclerViewModel(secondaryMicrophoneWorking, imgUri, false);
                     data.add(item);
@@ -326,7 +326,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (isDeviceRooted() ? R.drawable.warning_circle_svgrepo_com : R.drawable.done_round_svgrepo_com));
+                imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (isDeviceRooted() ? R.drawable.cancel_svgrepo_com : R.drawable.done_round_svgrepo_com));
                 rootedStatus = isDeviceRooted() ? "Device is rooted." : "Device is not rooted.";
                 item = new RecyclerViewModel(rootedStatus, imgUri, false);
                 data.set(4, item);
@@ -410,7 +410,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                 accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
                 if (allPermissionsGranted()) {
-                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (accelerometerSensor != null ? R.drawable.done_round_svgrepo_com : R.drawable.warning_circle_svgrepo_com));
+                    imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + (accelerometerSensor != null ? R.drawable.done_round_svgrepo_com : R.drawable.cancel_svgrepo_com));
                     accelerometerWorking = accelerometerSensor != null ? "Accelerometer is Working." : "Accelerometer is Not Working.";
                     item = new RecyclerViewModel(accelerometerWorking, imgUri, false);
                     data.set(6, item);
