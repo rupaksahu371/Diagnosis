@@ -3,12 +3,20 @@ package com.mobilicis.diagnosis;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.fingerprint.FingerprintManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.View;
@@ -31,22 +39,26 @@ public class TestActivity extends AppCompatActivity {
     ScriptGroup.Binding binding;
     FirebaseDatabase db;
     DatabaseReference reference;
-    static public String backCameraWorking;
-    static public String frontCameraWorking ;
-    static public String primaryMicrophoneWorking;
-    static public String secondaryMicrophoneWorking;
-    static public String bluetoothWorking ;
+    static private String backCameraWorking;
+    static private String backCameraRecording;
+    static private String frontCameraWorking ;
+    static private String frontCameraRecording ;
+    static private String primaryMicrophoneWorking;
+    static private String secondaryMicrophoneWorking;
+    static private String bluetoothWorking ;
+    static private String bluetoothWorking2 ;
     static public String rootedStatus;
-    static public String accelerometerWorking;
-    static public String gpsWorking;
-    static public String fingerprintWorking;
-    static public String isAutoTest;
-    static public String GyroscopeWorking;
-    static public String ProximityWorking;
+    static private String accelerometerWorking;
+    static private String gpsWorking;
+    static private String gpsWorking2;
+    static private String fingerprintWorking;
+    static private String isAutoTest;
+    static private String GyroscopeWorking;
+    static private String ProximityWorking;
     Button Export;
     ImageButton Back;
-    LinearLayout AutoTest, backCamera, frontCamera, Microphone, RootStatus, Bluetooth, Accelero, Gyroscope, Proximity, GPS, Fingerprint;
-    CardView Auto_cv, backCamera_cv, frontCamera_cv, Microphone_cv, RootStatus_cv, Bluetooth_cv, Accelero_cv, Gyroscope_cv, Proximity_cv, GPS_cv, Fingerprint_cv;
+    LinearLayout AutoTest, backCamera, frontCamera, Bluetooth, Gyroscope, Proximity, GPS, Fingerprint;
+    CardView Auto_cv, backCamera_cv, frontCamera_cv, Bluetooth_cv, Gyroscope_cv, Proximity_cv, GPS_cv, Fingerprint_cv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,20 +77,13 @@ public class TestActivity extends AppCompatActivity {
                 rootedStatus = intent.getStringExtra("rootedStatus");
                 accelerometerWorking = intent.getStringExtra("accelerometerWorking");
                 gpsWorking = intent.getStringExtra("gpsWorking");
-                fingerprintWorking = intent.getStringExtra("fingerprintWorking");
                 isAutoTest = intent.getStringExtra("isAutoTest");
             } else if ("backIntent".equals(from)) {
-                backCameraWorking = intent.getStringExtra("backCameraWorking");
+                backCameraRecording = intent.getStringExtra("backCameraRecording");
             } else if ("frontIntent".equals(from)) {
-                frontCameraWorking = intent.getStringExtra("frontCameraWorking");
-            } else if ("microIntent".equals(from)) {
-                primaryMicrophoneWorking = intent.getStringExtra("primaryMicrophoneWorking");
-            } else if ("rootIntent".equals(from)) {
-                rootedStatus = intent.getStringExtra("rootedStatus");
+                frontCameraRecording = intent.getStringExtra("frontCameraRecording");
             } else if ("btIntent".equals(from)) {
                 bluetoothWorking = intent.getStringExtra("bluetoothWorking");
-            }else if ("accIntent".equals(from)) {
-                accelerometerWorking = intent.getStringExtra("accelerometerWorking");
             }else if ("gyroscopeIntent".equals(from)) {
                 GyroscopeWorking = intent.getStringExtra("GyroscopeWorking");
             }else if ("proximityIntent".equals(from)) {
@@ -93,22 +98,7 @@ public class TestActivity extends AppCompatActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
-                builder.setMessage("Do you want to cancel?");
-
-                builder.setTitle("Alert !");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    Intent intent = new Intent(TestActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
-                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    dialog.cancel();
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                onBackPressed();
             }
         });
 
@@ -126,7 +116,7 @@ public class TestActivity extends AppCompatActivity {
         backCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Objects.equals(isAutoTest, ("Done")) || Objects.equals(isAutoTest, ("Skip")) && backCameraWorking == null){
+                if (Objects.equals(isAutoTest, ("Done"))){
                     Intent intent = new Intent(TestActivity.this, CameraActivity.class);
                     intent.putExtra("cameraSelector","back");
                     startActivity(intent);
@@ -141,7 +131,7 @@ public class TestActivity extends AppCompatActivity {
         frontCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (backCameraWorking != null && frontCameraWorking == null){
+                if (backCameraRecording != null){
                     Intent intent = new Intent(TestActivity.this, CameraActivity.class);
                     intent.putExtra("cameraSelector","front");
                     startActivity(intent);
@@ -153,52 +143,28 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-        Microphone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (frontCameraWorking != null && primaryMicrophoneWorking == null){
-                    Intent intent = new Intent(TestActivity.this, MicrophoneActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Toast.makeText(TestActivity.this, "Run Front Camera Test..", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        RootStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (primaryMicrophoneWorking != null && rootedStatus == null){
-                    //Check rooted status of device
-                }
-                else {
-                    Toast.makeText(TestActivity.this, "Run Microphone Test..", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         Bluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (rootedStatus != null && bluetoothWorking == null){
+                if (frontCameraRecording != null && (bluetoothWorking2 == null || Objects.equals(bluetoothWorking2, "Bluetooth is DISABLED.") || Objects.equals(bluetoothWorking2, "Bluetooth not supported on this device"))){
                     //Check bluetooth status of device
-                }
-                else {
-                    Toast.makeText(TestActivity.this, "Run Rooted status Test..", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        Accelero.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bluetoothWorking != null && accelerometerWorking == null){
-                    //Check accelerometer working of device
+                    if (bluetoothAdapter == null) {
+                        bluetoothWorking2 = "Bluetooth not supported on this device";
+                    }
+                    else {
+                        bluetoothWorking2 = bluetoothAdapter.isEnabled() ? "Bluetooth is ENABLED." : "Bluetooth is DISABLED.";
+                        if (!bluetoothAdapter.isEnabled()){
+                            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                            startActivity(intent);
+                        }
+                        bluetoothWorking2 = bluetoothAdapter.isEnabled() ? "Bluetooth is ENABLED." : "Bluetooth is DISABLED.";
+                    }
+                    setUI();
                 }
                 else {
-                    Toast.makeText(TestActivity.this, "Run Bluetooth Test..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TestActivity.this, "Run Front Camera Recording.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -206,11 +172,14 @@ public class TestActivity extends AppCompatActivity {
         Gyroscope.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (accelerometerWorking != null && GyroscopeWorking == null){
+                if (bluetoothWorking != null && GyroscopeWorking == null){
                     //Check Gyroscope working of device
+                    Intent intent = new Intent(TestActivity.this, GyroscopeActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else {
-                    Toast.makeText(TestActivity.this, "Run Accelerometer Test..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TestActivity.this, "Run Bluetooth Test..", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -230,7 +199,7 @@ public class TestActivity extends AppCompatActivity {
         GPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ProximityWorking != null && gpsWorking == null){
+                if (ProximityWorking != null && ( Objects.equals(gpsWorking2, "null") || Objects.equals(gpsWorking2, "GPS is disable."))){
                     //Check GPS working of device
                 }
                 else {
@@ -244,6 +213,9 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (gpsWorking != null && fingerprintWorking == null){
                     //Check Fingerprint working of device
+                    Intent intent = new Intent(TestActivity.this, FingerprintActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else {
                     Toast.makeText(TestActivity.this, "Run GPS Test..", Toast.LENGTH_SHORT).show();
@@ -283,10 +255,7 @@ public class TestActivity extends AppCompatActivity {
 
         backCamera = findViewById(R.id.ll_backcameratest);
         frontCamera = findViewById(R.id.ll_frontcameratest);
-        Microphone = findViewById(R.id.ll_microphonetest);
-        RootStatus = findViewById(R.id.ll_roottest);
         Bluetooth = findViewById(R.id.ll_bttest);
-        Accelero = findViewById(R.id.ll_accelerometertest);
         Gyroscope = findViewById(R.id.ll_gyroscopetest);
         Proximity = findViewById(R.id.ll_proximitytest);
         GPS = findViewById(R.id.ll_gpstest);
@@ -294,16 +263,12 @@ public class TestActivity extends AppCompatActivity {
 
         backCamera_cv = findViewById(R.id.backcamera_cv);
         frontCamera_cv = findViewById(R.id.frontcamera_cv);
-        Microphone_cv = findViewById(R.id.microphone_cv);
-        RootStatus_cv = findViewById(R.id.root_cv);
         Bluetooth_cv = findViewById(R.id.bluetooth_cv);
-        Accelero_cv = findViewById(R.id.accelerometer_cv);
         Gyroscope_cv = findViewById(R.id.gyroscope_cv);
         Proximity_cv = findViewById(R.id.proximity_cv);
         GPS_cv = findViewById(R.id.gps_cv);
         Fingerprint_cv = findViewById(R.id.fingerprint_cv);
     }
-
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
@@ -314,7 +279,7 @@ public class TestActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
             Intent intent = new Intent(TestActivity.this, MainActivity.class);
             startActivity(intent);
-            finish();
+            onDestroy();
             super.onBackPressed();
         });
         builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
@@ -324,79 +289,58 @@ public class TestActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
     public void setUI(){
-        if (Objects.equals(isAutoTest, "Done")){
+        if (isAutoTest != null){
             Auto_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
         }
         else {
             Auto_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
         }
 
-        if (Objects.equals(isAutoTest, ("Done")) || Objects.equals(isAutoTest, ("Skip"))) {
-            if (backCameraWorking != null) {
+        if (Objects.equals(isAutoTest, ("Done"))) {
+            if (backCameraRecording != null) {
                 backCamera_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {
                 backCamera_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || backCameraWorking != null) {
-            if (frontCameraWorking != null) {
+        if (Objects.equals(isAutoTest, ("Done")) && backCameraRecording != null) {
+            if (frontCameraRecording != null) {
                 frontCamera_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {
                 frontCamera_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || frontCameraWorking != null) {
-            if (primaryMicrophoneWorking != null) {
-                Microphone_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
-            } else {
-                Microphone_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
-            }
-        }
-        if (Objects.equals(isAutoTest, ("Done")) || primaryMicrophoneWorking != null) {
-            if (rootedStatus != null) {
-                RootStatus_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
-            } else {
-                RootStatus_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
-            }
-        }
-        if (Objects.equals(isAutoTest, ("Done")) || rootedStatus != null) {
-            if (bluetoothWorking != null) {
-                Bluetooth_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
-            } else {
+
+        if (Objects.equals(isAutoTest, ("Done")) && frontCameraRecording != null) {
+            if (bluetoothWorking2 == null || Objects.equals(bluetoothWorking2, "Bluetooth is DISABLED.") || Objects.equals(bluetoothWorking2, "Bluetooth not supported on this device")){
                 Bluetooth_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
-            }
-        }
-        if (Objects.equals(isAutoTest, ("Done")) || bluetoothWorking != null) {
-            if (accelerometerWorking != null) {
-                Accelero_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {
-                Accelero_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
+                Bluetooth_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || accelerometerWorking != null) {
+        if (Objects.equals(isAutoTest, ("Done")) && bluetoothWorking2 != null) {
             if (GyroscopeWorking != null) {
                 Gyroscope_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {
                 Gyroscope_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || GyroscopeWorking != null) {
+        if (Objects.equals(isAutoTest, ("Done")) && GyroscopeWorking != null) {
             if (ProximityWorking != null) {
                 Proximity_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {
                 Proximity_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || ProximityWorking != null) {
-            if (gpsWorking != null) {
-                GPS_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
-            } else {
+        if (Objects.equals(isAutoTest, ("Done")) && ProximityWorking != null) {
+            if (Objects.equals(gpsWorking2, "null") || Objects.equals(gpsWorking2, "GPS is disable.")){
                 GPS_cv.setCardBackgroundColor(Color.rgb(242, 205, 205));
+            } else {
+                GPS_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             }
         }
-        if (Objects.equals(isAutoTest, ("Done")) || gpsWorking != null) {
+        if (Objects.equals(isAutoTest, ("Done")) && gpsWorking2 != null) {
             if (fingerprintWorking != null) {
                 Fingerprint_cv.setCardBackgroundColor(Color.rgb(205, 242, 222));
             } else {

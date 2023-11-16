@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GyroscopeActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        style="@style/backgrounds">
+        <ImageButton
+            style="@style/iconStyle"
+            android:id="@+id/back_btn1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="7dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_chevron_left_24"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/blue"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gyroscope Test"
+            android:textSize="25dp"
+            style="@style/textStyle"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="10dp">
+    <ImageView
+        android:id="@+id/gyroscope_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/smartphone_rotate_2_svgrepo_com"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="23sp"
+        style="@style/textStyle"
+        android:text="Test Result"
+        android:id="@+id/gyroscopeStatusTextView"/>
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/continue_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:visibility="gone"
+        android:layout_marginHorizontal="30dp"
+        style="@style/buttonStyle"/>
+</LinearLayout>

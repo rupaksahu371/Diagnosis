@@ -1,25 +1,28 @@
 package com.mobilicis.diagnosis;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FrontCameraActivity extends AppCompatActivity {
 
     Button visible, invisible;
-    ImageView showImg;
-    Uri showImgURI;
+    VideoView showVideo;
+    Uri showVideoURI;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_front_camera);
 
-        showImg = findViewById(R.id.showImg1);
+        showVideo = findViewById(R.id.showVideo1);
         visible = findViewById(R.id.visible_btn1);
         invisible = findViewById(R.id.notVisible_btn1);
 
@@ -27,7 +30,7 @@ public class FrontCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FrontCameraActivity.this, TestActivity.class);
-                intent.putExtra("frontCameraWorking", "Front camera is working.");
+                intent.putExtra("frontCameraRecording", "Front camera is Recording.");
                 intent.putExtra("source", "frontIntent");
                 startActivity(intent);
                 finish();
@@ -38,7 +41,7 @@ public class FrontCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FrontCameraActivity.this, TestActivity.class);
-                intent.putExtra("frontCameraWorking", "Front camera is not working.");
+                intent.putExtra("frontCameraRecording", "Front camera is not Recording.");
                 intent.putExtra("source", "frontIntent");
                 startActivity(intent);
                 finish();
@@ -47,9 +50,17 @@ public class FrontCameraActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent!=null){
-           String ImgURI = intent.getStringExtra("showUri");
-           showImgURI = Uri.parse(ImgURI);
+           String VideoURI = intent.getStringExtra("showURI");
+            showVideoURI = Uri.parse(VideoURI);
         }
-        showImg.setImageURI(showImgURI);
+        showVideo.setVideoURI(showVideoURI);
+
+        showVideo.start();
+        showVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
     }
 }

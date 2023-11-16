@@ -1,26 +1,31 @@
 package com.mobilicis.diagnosis;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.video.VideoCapture;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 public class BackCameraActivity extends AppCompatActivity {
 
     Button visible, invisible;
-    ImageView showImg;
-    Uri showImgURI;
+    VideoView showVideo;
+    Uri showVideoURI;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_camera);
 
-        showImg = findViewById(R.id.showImg);
+        showVideo = findViewById(R.id.showVideo);
         visible = findViewById(R.id.visible_btn);
         invisible = findViewById(R.id.notVisible_btn);
 
@@ -28,7 +33,7 @@ public class BackCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BackCameraActivity.this, TestActivity.class);
-                intent.putExtra("backCameraWorking", "Back camera is working.");
+                intent.putExtra("backCameraRecording", "Back camera is recording.");
                 intent.putExtra("source", "backIntent");
                 startActivity(intent);
                 finish();
@@ -39,7 +44,7 @@ public class BackCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BackCameraActivity.this, TestActivity.class);
-                intent.putExtra("backCameraWorking", "Back camera is not working.");
+                intent.putExtra("backCameraRecording", "Back camera is not recording.");
                 intent.putExtra("source", "backIntent");
                 startActivity(intent);
                 finish();
@@ -48,9 +53,18 @@ public class BackCameraActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent!=null){
-           String ImgURI = intent.getStringExtra("showUri");
-           showImgURI = Uri.parse(ImgURI);
+           String VideoURI = intent.getStringExtra("showURI");
+           showVideoURI = Uri.parse(VideoURI);
         }
-        showImg.setImageURI(showImgURI);
+        Log.d("Rupak", "onCreate: "+ showVideoURI);
+        showVideo.setVideoURI(showVideoURI);
+        // starts the video
+        showVideo.start();
+        showVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
     }
 }

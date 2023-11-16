@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -85,265 +86,134 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/backcamera_cv"
-        style="@style/backgrounds1"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_backcameratest"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/lightIcon"
-                android:src="@drawable/camera_minimalistic_svgrepo_com"
-                android:layout_margin="20dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Back Camera Testing"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="4dp"
-                android:textSize="20dp"
-                style="@style/textStyle"/>
-            <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/backcamera_cv"
+                style="@style/backgrounds1"
+                android:layout_margin="15dp"
+                app:cardCornerRadius="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_backcameratest"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/camera_minimalistic_svgrepo_com"
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Back Camera Recording"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="20dp"
+                            style="@style/textStyle"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="test the back camera is recording or not"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="15dp"
+                            style="@style/textStyle1"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="test the back camera is working or not"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="4dp"
-                android:textSize="15dp"
-                style="@style/textStyle1"/>
-        </LinearLayout>
-        </LinearLayout>
+                android:id="@+id/frontcamera_cv"
+                style="@style/backgrounds1"
+                android:layout_margin="15dp"
+                app:cardCornerRadius="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_frontcameratest"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/frontcamera"
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Front Camera Recording"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="20dp"
+                            style="@style/textStyle"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="test the front camera is recording or not"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="15dp"
+                            style="@style/textStyle1"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/frontcamera_cv"
-        style="@style/backgrounds1"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_frontcameratest"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:tint="@color/lightIcon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/frontcamera"
-                android:layout_margin="20dp"/>
-            <LinearLayout
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Front Camera Testing"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="20dp"
-                    style="@style/textStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="test the front camera is working or not"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="15dp"
-                    style="@style/textStyle1"/>
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:id="@+id/bluetooth_cv"
+                style="@style/backgrounds1"
+                android:layout_margin="15dp"
+                app:cardCornerRadius="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_bttest"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/bluetooth_wave_svgrepo_com"
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bluetooth Test"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="20dp"
+                            style="@style/textStyle"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check bluetooth workings"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:textSize="15dp"
+                            style="@style/textStyle1"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/backgrounds1"
-        android:id="@+id/microphone_cv"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_microphonetest"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/lightIcon"
-                android:src="@drawable/microphone_svgrepo_com"
-                android:layout_margin="20dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Microphone Testing"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="20dp"
-                    style="@style/textStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="test microphones are working or not"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="15dp"
-                    style="@style/textStyle1"/>
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/root_cv"
-        style="@style/backgrounds1"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_roottest"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/lightIcon"
-                android:src="@drawable/android_svgrepo_com"
-                android:layout_margin="20dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rooted Status"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="20dp"
-                    style="@style/textStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Checks rooted status of device"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="15dp"
-                    style="@style/textStyle1"/>
-            </LinearLayout>
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bluetooth_cv"
-        style="@style/backgrounds1"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_bttest"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/lightIcon"
-                android:src="@drawable/bluetooth_wave_svgrepo_com"
-                android:layout_margin="20dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bluetooth Test"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="20dp"
-                    style="@style/textStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Check bluetooth workings"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="15dp"
-                    style="@style/textStyle1"/>
-            </LinearLayout>
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/accelerometer_cv"
-        style="@style/backgrounds1"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="30dp">
-        <LinearLayout
-            android:id="@+id/ll_accelerometertest"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="6dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/lightIcon"
-                android:src="@drawable/sensor_svgrepo_com"
-                android:layout_margin="20dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Accelerometer Sensor Testing"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="20dp"
-                    style="@style/textStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="test accelerometer sensor"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="15dp"
-                    style="@style/textStyle1"/>
-            </LinearLayout>
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -360,9 +230,9 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:tint="@color/lightIcon"
                         android:src="@drawable/smartphone_rotate_angle_svgrepo_com"
-                        android:layout_margin="20dp"/>
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -403,9 +273,9 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:tint="@color/lightIcon"
                         android:src="@drawable/proximity"
-                        android:layout_margin="20dp"/>
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -446,9 +316,9 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:tint="@color/lightIcon"
                         android:src="@drawable/gps_svgrepo_com"
-                        android:layout_margin="20dp"/>
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -489,9 +359,9 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:tint="@color/lightIcon"
                         android:src="@drawable/fingerprint_svgrepo_com"
-                        android:layout_margin="20dp"/>
+                        android:layout_margin="20dp"
+                        app:tint="@color/lightIcon" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

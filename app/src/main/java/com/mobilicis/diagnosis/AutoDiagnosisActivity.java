@@ -70,7 +70,6 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
     private String rootedStatus;
     private String accelerometerWorking;
     private String gpsWorking;
-    private String fingerprintWorking;
     public RecyclerViewModel item;
     public Uri imgUri;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
@@ -101,66 +100,14 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AutoDiagnosisActivity.this);
-                builder.setMessage("Do you want to cancel?");
-
-                builder.setTitle("Alert !");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
-                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    dialog.cancel();
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                onBackPressed();
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Rupak", "onClick: "+cancel.getText().toString());
-                if (cancel.getText().toString() == "Continue"){
-                        Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
-                        intent.putExtra("source","autoIntent");
-                        intent.putExtra("backCameraWorking",backCameraWorking);
-                        intent.putExtra("frontCameraWorking",frontCameraWorking);
-                        intent.putExtra("primaryMicrophoneWorking",primaryMicrophoneWorking);
-                        intent.putExtra("secondaryMicrophoneWorking",secondaryMicrophoneWorking);
-                        intent.putExtra("bluetoothWorking",bluetoothWorking);
-                        intent.putExtra("rootedStatus",rootedStatus);
-                        intent.putExtra("accelerometerWorking",accelerometerWorking);
-                        intent.putExtra("gpsWorking",gpsWorking);
-                        intent.putExtra("fingerprintWorking",fingerprintWorking);
-                        intent.putExtra("isAutoTest","Done");
-                        startActivity(intent);
-                        finish();
-                    }
-                else {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(AutoDiagnosisActivity.this);
-                    builder1.setMessage("Do you want to skip Auto Diagnosis?");
-
-                    builder1.setTitle("Alert !");
-                    builder1.setCancelable(false);
-                    builder1.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                        Toast.makeText(AutoDiagnosisActivity.this, "Skipped....", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
-                        intent.putExtra("source","autoIntent");
-                        intent.putExtra("isAutoTest","Skip");
-                        startActivity(intent);
-                        finish();
-                    });
-                    builder1.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
-                        dialog.cancel();
-                    });
-
-                    AlertDialog alertDialog = builder1.create();
-                    alertDialog.show();
-                }
+                onBackPressed();
             }
         });
         AutoTest.setClickable(false);
@@ -171,6 +118,19 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (cancel.getText().toString().equals("Continue")){
+            Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
+            intent.putExtra("source","autoIntent");
+            intent.putExtra("backCameraWorking",backCameraWorking);
+            intent.putExtra("frontCameraWorking",frontCameraWorking);
+            intent.putExtra("primaryMicrophoneWorking",primaryMicrophoneWorking);
+            intent.putExtra("secondaryMicrophoneWorking",secondaryMicrophoneWorking);
+            intent.putExtra("bluetoothWorking",bluetoothWorking);
+            intent.putExtra("rootedStatus",rootedStatus);
+            intent.putExtra("accelerometerWorking",accelerometerWorking);
+            intent.putExtra("gpsWorking",gpsWorking);
+            intent.putExtra("isAutoTest","Done");
+            startActivity(intent);
+            finish();
             super.onBackPressed();
         }
         else {
@@ -182,8 +142,8 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
             builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
                 Intent intent = new Intent(AutoDiagnosisActivity.this, TestActivity.class);
                 startActivity(intent);
-                super.onBackPressed();
                 finish();
+                super.onBackPressed();
             });
             builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
                 dialog.cancel();
@@ -203,7 +163,6 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
         data.add(item);
         setMyAdapter();
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-        Log.d("Rupak", "CameraTesting: " + cameraProviderFuture);
         if (allPermissionsGranted()) {
             AutoTest.setVisibility(View.GONE);
             previewView.setVisibility(View.VISIBLE);
@@ -456,7 +415,7 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     item = new RecyclerViewModel(accelerometerWorking, imgUri, false);
                     data.set(6, item);
                     setMyAdapter();
-                    progress.setProgress(70);
+                    progress.setProgress(80);
                     GPSTest();
                 } else {
                     ActivityCompat.requestPermissions(AutoDiagnosisActivity.this, REQUIRED_PERMISSIONS, REQUEST_AUDIO_PERMISSION);
@@ -485,58 +444,15 @@ public class AutoDiagnosisActivity extends AppCompatActivity {
                     item = new RecyclerViewModel(gpsWorking, imgUri, false);
                     data.set(7, item);
                     setMyAdapter();
-                    ObjectAnimator.ofInt(progress, "progress", 85).start();
-                    fingerprintTest();
+                    ObjectAnimator.ofInt(progress, "progress", 100).start();
+                    AutoTest.setImageDrawable(getDrawable(R.drawable.done_round_svgrepo_com));
+                    tests.setText("test completed!");
+                    cancel.setText("Continue");
+                    cancel.setTextAppearance(R.style.buttonStyle);
+                    cancel.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(18, 175, 218)));
                 } else {
                     ActivityCompat.requestPermissions(AutoDiagnosisActivity.this, REQUIRED_PERMISSIONS, REQUEST_AUDIO_PERMISSION);
                 }
-            }
-        }, 3000);
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void fingerprintTest() {
-        AutoTest.setImageDrawable(getDrawable(R.drawable.fingerprint_svgrepo_com));
-        item = new RecyclerViewModel("Fingerprint sensor testing...", true);
-        tests.setText("Fingerprint sensor testing...");
-        data.add(item);
-        setMyAdapter();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (allPermissionsGranted()) {
-                    Context context = AutoDiagnosisActivity.this;
-                    FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
-                    if (!fingerprintManager.isHardwareDetected()) {
-                        imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.cancel_svgrepo_com);
-                        fingerprintWorking = "Fingerprint sensor is not available.";
-                        item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(8, item);
-                        setMyAdapter();
-                    } else if (!fingerprintManager.hasEnrolledFingerprints()) {
-                        imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.warning_circle_svgrepo_com);
-                        fingerprintWorking = "Fingerprint sensor is working \n but not enrolled.";
-                        item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(8, item);
-                        setMyAdapter();
-                    } else {
-                        imgUri = Uri.parse("android.resource://com.mobilicis.diagnosis/" + R.drawable.done_round_svgrepo_com);
-                        fingerprintWorking = "Fingerprint sensor is working.";
-                        item = new RecyclerViewModel(fingerprintWorking, imgUri, false);
-                        data.set(8, item);
-                        setMyAdapter();
-                    }
-                    progress.setProgress(100);
-                } else {
-                    ActivityCompat.requestPermissions(AutoDiagnosisActivity.this, REQUIRED_PERMISSIONS, REQUEST_AUDIO_PERMISSION);
-
-                }
-                AutoTest.setImageDrawable(getDrawable(R.drawable.done_round_svgrepo_com));
-                tests.setText("test completed!");
-                cancel.setText("Continue");
-                cancel.setTextAppearance(R.style.buttonStyle);
-                cancel.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(18, 175, 218)));
             }
         }, 3000);
     }
